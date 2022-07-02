@@ -310,7 +310,7 @@ export class Blogtruyen extends Source {
             let id = $(obj).attr("href") ?? title;
             // if (!id || !subtitle) continue;
             newAddItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: !image ? "https://i.imgur.com/GYUxEX8.png" : encodeURI(image.replace('110x110', '300x300')),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
