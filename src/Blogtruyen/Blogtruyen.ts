@@ -29,7 +29,7 @@ export const BlogtruyenInfo: SourceInfo = {
     author: 'Huynhzip3',
     authorWebsite: 'https://github.com/huynh12345678',
     description: 'Extension that pulls manga from Blogtruyen',
-    websiteBaseURL: `https://blogtruyen.vn`,
+    websiteBaseURL: `${DOMAIN}`,
     contentRating: ContentRating.MATURE,
     sourceTags: [
         {
@@ -40,7 +40,7 @@ export const BlogtruyenInfo: SourceInfo = {
 }
 
 export class Blogtruyen extends Source {
-    getMangaShareUrl(mangaId: string): string { return `https://blogtruyen.vn${mangaId}` };
+    getMangaShareUrl(mangaId: string): string { return `${DOMAIN}/${mangaId}` };
     requestManager = createRequestManager({
         requestsPerSecond: 5,
         requestTimeout: 20000,
@@ -64,7 +64,7 @@ export class Blogtruyen extends Source {
     })
 
     async getMangaDetails(mangaId: string): Promise<Manga> {
-        const url = `https://blogtruyen.vn${mangaId}`;
+        const url = `${DOMAIN}/${mangaId}`;
         const request = createRequestObject({
             url: url,
             method: "GET",
@@ -111,7 +111,7 @@ export class Blogtruyen extends Source {
     }
     async getChapters(mangaId: string): Promise<Chapter[]> {
         const request = createRequestObject({
-            url: `https://blogtruyen.vn${mangaId}`,
+            url: `${DOMAIN}/${mangaId}`,
             method,
         });
 
@@ -215,7 +215,7 @@ export class Blogtruyen extends Source {
         //Featured
         let url = `${DOMAIN}`
         let request = createRequestObject({
-            url: 'https://blogtruyen.vn/thumb',
+            url: `${DOMAIN}/thumb`,
             method: "GET",
         });
         let data = await this.requestManager.schedule(request, 1);
@@ -228,7 +228,7 @@ export class Blogtruyen extends Source {
             const subtitle = ($('p:last-child', $(manga).next()).text().trim());
             if (!id || !title) continue;
             featuredItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: encodeURI(image),
                 title: createIconText({ text: decodeHTMLEntity(title) }),
                 subtitleText: createIconText({ text: decodeHTMLEntity(subtitle) }),
@@ -237,7 +237,7 @@ export class Blogtruyen extends Source {
         featured.items = featuredItems;
         sectionCallback(featured);
 
-        //Hot
+        // Hot
         url = '';
         request = createRequestObject({
             url: 'https://blogtruyen.vn/ajax/Search/AjaxLoadListManga?key=tatca&orderBy=3&p=1',
@@ -252,7 +252,7 @@ export class Blogtruyen extends Source {
             const image = $('img', $(obj).next()).attr('src') ?? "";
             let id = $(`a`, obj).attr('href') ?? title;
             hotItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: encodeURI(image.replace('150x', '300x300')),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
@@ -281,7 +281,7 @@ export class Blogtruyen extends Source {
             let id = $(`div:nth-child(1) > a`, obj).attr('href') ?? title;
             // if (!id || !subtitle) continue;
             newUpdatedItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: !image ? "https://i.imgur.com/GYUxEX8.png" : encodeURI(image),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
@@ -338,7 +338,7 @@ export class Blogtruyen extends Source {
             const image = $('img', $(obj).next()).attr('src') ?? "";
             let id = $(`a`, obj).attr('href') ?? title;
             fullItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: encodeURI(image.replace('150x', '300x300')),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
@@ -366,7 +366,7 @@ export class Blogtruyen extends Source {
             const image = $('img', $(obj).next()).attr('src') ?? "";
             let id = $(`a`, obj).attr('href') ?? title;
             girlItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: encodeURI(image.replace('150x', '300x300')),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
@@ -394,7 +394,7 @@ export class Blogtruyen extends Source {
             const image = $('img', $(obj).next()).attr('src') ?? "";
             let id = $(`a`, obj).attr('href') ?? title;
             boyItems.push(createMangaTile({
-                id: id,
+                id: id.split("/")[1],
                 image: encodeURI(image.replace('150x', '300x300')),
                 title: createIconText({
                     text: decodeHTMLEntity(title),
@@ -415,23 +415,23 @@ export class Blogtruyen extends Source {
         let select = 1;
         switch (homepageSectionId) {
             case "hot":
-                url = `https://blogtruyen.vn/ajax/Search/AjaxLoadListManga?key=tatca&orderBy=3&p=${page}`;
+                url = `${DOMAIN}/ajax/Search/AjaxLoadListManga?key=tatca&orderBy=3&p=${page}`;
                 select = 0;
                 break;
             case "new_updated":
-                url = `https://blogtruyen.vn/thumb-${page}`;
+                url = `${DOMAIN}/thumb-${page}`;
                 select = 1;
                 break;
             case "full":
-                url = `https://blogtruyen.vn/ajax/Category/AjaxLoadMangaByCategory?id=0&orderBy=5&p=${page}`;
+                url = `${DOMAIN}/ajax/Category/AjaxLoadMangaByCategory?id=0&orderBy=5&p=${page}`;
                 select = 0;
                 break;
             case "girl":
-                url = `https://blogtruyen.vn/ajax/Category/AjaxLoadMangaByCategory?id=29&orderBy=5&p=${page}`;
+                url = `${DOMAIN}/ajax/Category/AjaxLoadMangaByCategory?id=29&orderBy=5&p=${page}`;
                 select = 0;
                 break;
             case "boy":
-                url = `https://blogtruyen.vn/ajax/Category/AjaxLoadMangaByCategory?id=31&orderBy=5&p=${page}`;
+                url = `${DOMAIN}/ajax/Category/AjaxLoadMangaByCategory?id=31&orderBy=5&p=${page}`;
                 select = 0;
                 break;
             default:
@@ -459,7 +459,7 @@ export class Blogtruyen extends Source {
         let page = metadata?.page ?? 1;
         const tags = query.includedTags?.map(tag => tag.id) ?? [];
         const request = createRequestObject({
-            url: encodeURI(`https://blogtruyen.vn/timkiem/nangcao/1/0/${tags[0] ? tags[0] : '-1'}/-1?txt=${query.title ? query.title : ''}`),
+            url: encodeURI(`${DOMAIN}/timkiem/nangcao/1/0/${tags[0] ? tags[0] : '-1'}/-1?txt=${query.title ? query.title : ''}`),
             method: "GET",
             param: encodeURI(`&p=${page}`)
         });
@@ -478,7 +478,7 @@ export class Blogtruyen extends Source {
 
     async getSearchTags(): Promise<TagSection[]> {
         const tags: Tag[] = [];
-        const url = `https://blogtruyen.vn/timkiem/nangcao`
+        const url = `${DOMAIN}/timkiem/nangcao`
         const request = createRequestObject({
             url: url,
             method: "GET",
