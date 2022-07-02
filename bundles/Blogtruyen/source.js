@@ -878,7 +878,7 @@ class Blogtruyen extends paperback_extensions_common_1.Source {
                 let id = (_h = $(obj).attr("href")) !== null && _h !== void 0 ? _h : title;
                 // if (!id || !subtitle) continue;
                 newAddItems.push(createMangaTile({
-                    id: id,
+                    id: id.split("/")[1],
                     image: !image ? "https://i.imgur.com/GYUxEX8.png" : encodeURI(image.replace('110x110', '300x300')),
                     title: createIconText({
                         text: BlogtruyenParser_1.decodeHTMLEntity(title),
